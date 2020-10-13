@@ -1,8 +1,8 @@
 
 // Fonction appelée lors du click du bouton
-function start() {
+function start(ville) {
   // Création de l'objet apiWeather
-  const apiWeather = new API_WEATHER();
+  const apiWeather = new API_WEATHER(ville);
   // Appel de la fonction fetchTodayForecast
 
   apiWeather
@@ -28,4 +28,40 @@ function start() {
       // Affiche une erreur
       console.error(error);
     });
+
+
+    apiWeather
+      .getThreeDayForecast()
+      .then(function(response) {
+        // Récupère la donnée d'une API
+        const data = response.data;
+
+        for(i=1; i<4;i++){
+          // On récupère l'information principal
+      const main = data.list[i].weather[0].main;
+      const description = data.list[i].weather[0].description;
+      const temp = data.list[i].temp.day;
+      const icon = apiWeather.getHTMLElementFromIcon(data.list[i].weather[0].icon);
+        
+        // Modifier le DOM
+      document.getElementById('today-forecast-main-'+i).innerHTML = main;
+      document.getElementById('today-forecast-more-info-'+i).innerHTML = description;
+      document.getElementById('icon-weather-container-'+i).innerHTML = icon;
+      document.getElementById('today-forecast-temp-'+i).innerHTML = `${temp}°C`;
+      }
+      
+    })
+
+    .catch(function(error) {
+      // Affiche une erreur
+      console.error(error);
+    });
 }
+function nouvelle_ville(){
+        var ville = document.getElementById("city-input").value;
+        start(ville);
+}
+      
+
+
+
